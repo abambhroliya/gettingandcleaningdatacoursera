@@ -14,9 +14,10 @@ colnames(activitylables)<-c("Activity_code","Activity_name")
 traintest<-merge(traintest,activitylables,by=c("Activity_code"))
 var2<-grep("mean()",as.character(var[,2],value=T,fixed=T))
 var3<-grep("std()",as.character(var[,2],value=T,fixed=T))
-traintestsubset2<-a[,c("Subject","Activity_code","Activity_name")]
-traintestsubset3<-a[,c(as.character(var[var2,2]))]
-traintestsubset4<-a[,c(as.character(var[var3,2]))]
+traintestsubset2<-traintest[,c("Subject","Activity_code","Activity_name")]
+traintestsubset3<-traintest[,c(as.character(var[var2,2]))]
+traintestsubset4<-traintest[,c(as.character(var[var3,2]))]
 finaldata<-cbind(traintestsubset2,traintestsubset3,traintestsubset4)
 splitdata<-split(finaldata[4:82],list(finaldata$Activity_name, finaldata$Subject))
 tidydata<-sapply(splitdata,colMeans)
+write.table(tidydata,file="tidydata.txt")
