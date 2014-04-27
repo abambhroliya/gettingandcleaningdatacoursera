@@ -1,0 +1,22 @@
+Xtest<-read.table("./getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset/test/X_test.txt")
+subjecttest<-read.table("./getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset/test/subject_test.txt")
+ytest<-read.table("./getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset/test/y_test.txt")
+test<-cbind(subjecttest,ytest,Xtest)
+Xtrain<-read.table("./getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset/train/X_train.txt")
+subjecttrain<-read.table("./getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset/train/subject_train.txt")
+ytrain<-read.table("./getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset/train/y_train.txt")
+train<-cbind(subjecttrain,ytrain,Xtrain)
+var<-read.table("./getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset/features.txt")
+activitylables<-read.table("./getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset/activity_labels.txt")
+traintest<-rbind(train,test)
+colnames(traintest)<-c("Subject","Activity_code",as.character(var[,2]))
+colnames(activitylables)<-c("Activity_code","Activity_name")
+traintest<-merge(traintest,activitylables,by=c("Activity_code"))
+var2<-grep("mean()",as.character(var[,2],value=T,fixed=T))
+var3<-grep("std()",as.character(var[,2],value=T,fixed=T))
+traintestsubset2<-a[,c("Subject","Activity_code","Activity_name")]
+traintestsubset3<-a[,c(as.character(var[var2,2]))]
+traintestsubset4<-a[,c(as.character(var[var3,2]))]
+finaldata<-cbind(traintestsubset2,traintestsubset3,traintestsubset4)
+splitdata<-split(finaldata[4:82],list(finaldata$Activity_name, finaldata$Subject))
+tidydata<-sapply(splitdata,colMeans)
